@@ -2,6 +2,11 @@
 
 An object-oriented, performance-optimized suite of core data structures, self-balancing trees, graph traversal algorithms, and abstract data types built from scratch in Python.
 
+![Language](https://img.shields.io/badge/Language-Python%203.x-blue?logo=python&logoColor=white)
+![Data Engine](https://img.shields.io/badge/Data%20Engine-Custom%20Memory%20ADTs-orange?logo=databricks&logoColor=white)
+![Design Pattern](https://img.shields.io/badge/Pattern-Object--Oriented%20%28OOP%29-green)
+![Interface](https://img.shields.io/badge/Interface-Console%20Terminal-lightgrey)
+
 ---
 
 ## 🌐 Engine Overview
