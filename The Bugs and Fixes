@@ -1,0 +1,138 @@
+This repository have code implementations for several essential Data Structures and Algorithms (DSA) concepts—ranging from Arrays and Linked Lists to Trees, Heaps, and Graphs.
+
+However, there are several **logic bugs, runtime errors, and broken code blocks** across these files that will throw errors when you try to run them. Here is a review of the critical issues found in each lab, along with their quick fixes.
+
+---
+
+## 🐛 Critical Code Fixes
+
+### 1. `Lab 2 dsa.py` (Dynamic Array)
+
+* **The Bug:** In the `set(self, index, value)` method on line 26:
+```python
+if index < 0 or index >= 0:  # Incorrect boundary check
+    return "error"
+
+```
+
+
+Because `index >= 0` is always true for positive indices, this method will **always** return `"error"` and fail to set any value.
+* **The Fix:** Change it to check against the current size of the array:
+```python
+if index < 0 or index >= self.size:
+    return "error"
+
+```
+
+
+
+### 2. `Lab 7 dsa (1).py` (Heap / Priority Queue)
+
+* **The Bug 1 (Missing Parentheses):** On line 20, inside `dequeue()`:
+```python
+return self.heap.pop  # Returns the function object pointer, doesn't execute it
+
+```
+
+
+This returns the built-in method object instead of removing and returning the item. Change it to `return self.heap.pop()`.
+* **The Bug 2 (Incorrect Object Comparison):** On line 58, inside `min()`:
+```python
+if self.heap == 0:  # Comparing a list object directly to an integer
+
+```
+
+
+This condition will never be true. Change it to check the list length: `if len(self.heap) == 0:` or `if not self.heap:`.
+
+### 3. `lab 4.py` (Singly Linked List)
+
+* **The Bug:** In the `insert_after` method (lines 55-57):
+```python
+if curr.data == target:
+    last_occ = None  # Re-assigns it to None right when it finds the target
+curr = curr.next
+if last_occ:  # This block is outside the while loop's matching condition block
+
+```
+
+
+As written, `last_occ` will never evaluate to a node object correctly, meaning your `insert_after` operation completely fails to insert anything.
+* **The Fix:** Update the block to properly capture the node track and execute the structural splice inside the traversal:
+```python
+def insert_after(self, target, new_data):
+    curr = self.head
+    while curr:
+        if curr.data == target:
+            newnode = SinglyLinkedList(new_data)
+            newnode.next = curr.next
+            curr.next = newnode
+            return  # Remove if you want to insert after every occurrence
+        curr = curr.next
+
+```
+
+
+
+### 4. `lab 6 dsa.py` (Binary Search Tree)
+
+* **The Bug:** Inside the structural `_insert` fallback helper (lines 34-40):
+```python
+if parent.right:
+    self._insert(parent.right, value)
+else:
+    Parent.right = Parent(value)  # Using Class identifier capitalization
+
+```
+
+
+`Parent.right` tries to assign an attribute directly to the class blueprint rather than the local object instance argument `parent`. This throws an explicit `AttributeError`. Change it to lowercase `parent.right = Parent(value)`.
+
+### 5. `Lab 7 DSA.py` (Time Complexity & Stack)
+
+* **The Bug:** The file cuts off mid-sentence at the very end:
+```python
+def is_emp_  # Truncated code syntax error
+
+```
+
+
+* **The Fix:** Complete the empty check method for your stack object wrapper context:
+```python
+def is_empty(self):
+    return self.size == 0
+
+```
+
+
+
+---
+
+## 📈 Time Complexity Corrections (`Lab 1 DSA.py`)
+
+In this repo comments at the bottom of Lab 1 have analyzed some loop complexities. A few of these are slightly off:
+
+* **Question 2 Analysis:** ```python
+for j in range(1, n + 1):
+total += helper(j)
+```
+This note mentions $n^2$, which is correct for the total accumulated iterations ($1 + 2 + 3 + \dots + n = \frac{n(n+1)}{2}$). However, because you placed a `return total` **inside** the loop at line 81, the loop terminates prematurely on the very first iteration. As currently written, the runtime performance behaves as $O(1)$. If you fix the indentation of `return total` to sit *outside* the loop, the performance will properly become $\mathcal{O}(n^2)$.
+
+
+```
+
+
+* **Question 4 Analysis:**
+```python
+for i in range(1, n + 1):
+    for j in range(1, n + 1):
+        total += 1
+        if total > n:
+            break
+
+```
+
+
+Your comment notes this as $n^2$. However, notice the early termination guard: `if total > n: break`. Because `total` increases on every single inner step cross-cutting both loops, `total` will surpass $n$ during the very first outer loop sequence (when $i=1$, $j$ runs from $1$ to $n+1$). The total step count across the structure will never exceed $n + 1$. Therefore, the true time complexity is actually linear, $\mathcal{O}(n)$, rather than quadratic!
+
+Which data structure implementation would you like to work on optimizing or fixing up next?
